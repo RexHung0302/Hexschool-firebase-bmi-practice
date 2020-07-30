@@ -1,0 +1,20 @@
+/*------------------------------------*\
+    $VARIABLE
+\*------------------------------------*/
+
+@import "../../../node_modules/bootstrap/scss/functions";
+@import './variables'; // 修改 BS 變數
+@import "../../../node_modules/bootstrap/scss/mixins";
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+@import './base'; // 共用 CSS
+@import './utilities'; // 工具類
+
+/*------------------------------------*\
+    $COMPONENTS
+\*------------------------------------*/
+
+@import './header';
+
+/*------------------------------------*\
+    $PAGES
+\*------------------------------------*/
