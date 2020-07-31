@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: '/Hexschool-firebase-bmi-practice/dist'
+  publicPath: '/Hexschool-firebase-bmi-practice/dist/'
 }
