@@ -1,5 +1,7 @@
 # Hexschool-firebase-bmi-practice
 
+[Demo](https://rexhung0302.github.io/Hexschool-firebase-bmi-practice/dist/index.html)
+
 ## 運作環境
 * Chrome v49+ or Firefox v45+ or Safari v9+
 * 一台筆電 或 桌電 或 近代的手機(至少要能跑 Angry Birds )
