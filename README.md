@@ -1,6 +1,6 @@
 # Hexschool-firebase-bmi-practice
 
-[Demo](https://rexhung0302.github.io/Hexschool-firebase-bmi-practice/dist/index.html)
+[Demo](https://rexhung0302.github.io/Hexschool-firebase-bmi-practice/index.html)
 
 ## 運作環境
 * Chrome v49+ or Firefox v45+ or Safari v9+
