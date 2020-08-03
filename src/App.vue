@@ -70,10 +70,10 @@
                 ) {{ bmi >= 35 ? '重度肥胖' : bmi >= 30 ? '中度肥胖' : bmi >= 27 ? '輕度肥胖' : bmi >= 24 ? '過重' : bmi >= 18.5 ? '理想' : bmi >= 0 ? '過輕' : '壞掉啦' }}
       section.py-5.mb-auto.bg-gray.h-100.overflow-y-auto
         h4.text-center.mb-4 BMI 紀錄
-        .container.d-flex.flex-column.align-items-center.justify-content-center
-          ul.list-style-none.pl-0.mb-0.w-100(
-            v-if="bmi_arr.length > 0"
-          )
+        .container.d-flex.flex-column.align-items-center.justify-content-center(
+          v-if="bmi_arr.length > 0"
+        )
+          ul.list-style-none.pl-0.mb-0.w-100
             li.w-100.mb-3(
               v-for="(datum,index) in bmi_arr"
             )
@@ -95,11 +95,19 @@
                 .col-12.col-md.mb-2.mb-md-0
                   small.text-dark.pr-1 height 
                   h5.d-inline-block.mb-0 {{ datum.height }}cm
-                .col-12.col-md
+                .col-12.col-md.mb-2.mb-md-0
                   small.text-dark {{ datum.date }}
-          h4.text-center.mb-4(
-            v-else
-          ) 無紀錄
+                .col-12.col-md
+                  button.btn.btn-danger(
+                    @click="deleteHandler(datum.id)"
+                  ) 刪除
+          button.btn.btn-block.btn-danger(
+            @click="deleteHandler('all')"
+          ) 全部刪除
+
+        h4.text-center.mb-4(
+          v-else
+        ) 無紀錄
       footer
         .bg-primary.py-3.text-center
           img(
@@ -113,7 +121,6 @@
 <script>
 export default {
   name: "App",
-  components: {},
   data() {
     return {
       logo: require("@/assets/images/BMICLogo.png"),
@@ -133,6 +140,7 @@ export default {
       snapshot.forEach(i=>{
         let time_format = vm.$moment(i.val().date).format('DD-MM-YYYY');
         vm.bmi_arr.push({
+          id: i.key,
           height: i.val().height,
           weight: i.val().weight,
           bmi: i.val().bmi,
@@ -146,7 +154,7 @@ export default {
   },
   methods: {
     // 計算 BMI
-    sendBMIHandler: function() {
+    sendBMIHandler() {
       let vm = this;
       if (
         isNaN(parseInt(vm.height)) === true ||
@@ -183,13 +191,45 @@ export default {
       // 改變計算狀態
       vm.status = -1;
     },
+    // 刪除
+    deleteHandler(id) {
+      const vm = this;
+      if(!id) return;
+
+      vm.$swal({
+        icon: "question",
+        title: "您的操作將無法回覆",
+        html: id === 'all' ? '您確定執行全部資料清除嗎？' : id ? '您確定執行單筆刪除嗎？' : '',
+        heightAuto: false,
+        showCancelButton: true,
+        confirmButtonText: '確定',
+        cancelButtonText: '取消',
+      }).then((result) => {
+        if (result.value) {
+          // 全部刪除 及 單筆刪除
+          if(id === 'all') {
+            // 打API
+            vm.$firebase.database().ref('BMI').remove();
+            // 小彈窗
+            vm.callToast('success', '全部資料刪除成功');
+            vm.bmi_arr = [];
+          } else {
+            // 打API
+            vm.$firebase.database().ref('BMI').child(id).remove();
+            // 小彈窗
+            vm.callToast('success', '單筆刪除成功');
+          }
+        }
+      })
+      
+    },
     // 顯示 Header
-    headerShowHiddenHandler: function() {
+    headerShowHiddenHandler() {
       const vm = this;
       vm.showHeader = !vm.showHeader
     },
     // 重置
-    resetHandelr: function() {
+    resetHandelr() {
       const vm = this;
       vm.height = null;
       vm.weight = null;
@@ -197,7 +237,7 @@ export default {
       vm.status = 0;
     },
     // 小彈窗
-    callToast: function(icon, title) {
+    callToast(icon, title) {
       const vm = this;
       const Toast = vm.$swal.mixin({
         toast: true,
