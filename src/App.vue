@@ -136,7 +136,15 @@ export default {
   },
   created() {
     const vm = this;
-    vm.$firebase.database().ref('BMI').orderByChild('date').on('value', function(snapshot){
+    // 取得資料
+    vm.getFireBaseDataHandler();
+  },
+  methods: {
+    // 取得資料
+    getFireBaseDataHandler() {
+      const vm = this;
+      vm.bmi_arr = [];
+      vm.$firebase.database().ref('BMI').orderByChild('date').once('value', function(snapshot){
       snapshot.forEach(i=>{
         let time_format = vm.$moment(i.val().date).format('DD-MM-YYYY');
         vm.bmi_arr.push({
@@ -151,8 +159,7 @@ export default {
       // 小彈窗
       vm.callToast('success', '更新成功');
     });
-  },
-  methods: {
+    },
     // 計算 BMI
     sendBMIHandler() {
       let vm = this;
@@ -188,6 +195,8 @@ export default {
       // 小彈窗
       vm.callToast('success', '新增成功');
 
+      vm.getFireBaseDataHandler();
+
       // 改變計算狀態
       vm.status = -1;
     },
@@ -213,15 +222,16 @@ export default {
             // 小彈窗
             vm.callToast('success', '全部資料刪除成功');
             vm.bmi_arr = [];
+            vm.getFireBaseDataHandler();
           } else {
             // 打API
             vm.$firebase.database().ref('BMI').child(id).remove();
             // 小彈窗
             vm.callToast('success', '單筆刪除成功');
+            vm.getFireBaseDataHandler();
           }
         }
       })
-      
     },
     // 顯示 Header
     headerShowHiddenHandler() {
